@@ -55,9 +55,14 @@ class CliCalculator extends Command
     {
         $this->info($this->calculator->instruction());
 
-        $operation = $this->getValidInput('Please input an operation', function ($input) {
-            return $this->calculatorValidator->isValidOperation($input);
-        }, CalculatorErrorMessages::invalidOperation());
+        $operation = $this->getValidInput(
+            'Please input an operation: (use up or down arrow key)',
+            function ($input) {
+                return $this->calculatorValidator->isValidOperation($input);
+            },
+            CalculatorErrorMessages::invalidOperation(),
+            array_values(CalculatorOperations::all())
+        );
 
         $firstNum = $this->getValidInput('Input first number', function ($input) {
             return $this->calculatorValidator->isNumber($input);
@@ -92,15 +97,20 @@ class CliCalculator extends Command
      * @param string $prompt
      * @param callable $validationCallback
      * @param string $errorMessage
+     * @param array $anticipatedValues
      *
      * @return mixed
      */
-    private function getValidInput(string $prompt, callable $validationCallback, string $errorMessage)
-    {
+    private function getValidInput(
+        string $prompt,
+        callable $validationCallback,
+        string $errorMessage,
+        array $anticipatedValues = []
+    ) {
         while (true) {
-            $input = $this->ask($prompt);
+            $input = $this->anticipate($prompt, $anticipatedValues);
 
-            if (empty($input) && $input != 0) {
+            if (empty($input)) {
                 $this->error(CalculatorErrorMessages::CANNOT_BE_EMPTY);
                 continue;
             }
