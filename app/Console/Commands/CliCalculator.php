@@ -25,13 +25,25 @@ class CliCalculator extends Command
     protected $description = 'Opens up the CLI calculator.';
 
     /**
+     * @var Calculator
+     */
+    protected $calculator;
+
+    /**
+     * @var CalculatorValidator
+     */
+    protected $calculatorValidator;
+
+    /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Calculator $calculator, CalculatorValidator $calculatorValidator)
     {
         parent::__construct();
+        $this->calculator = $calculator;
+        $this->calculatorValidator = $calculatorValidator;
     }
 
     /**
@@ -41,40 +53,18 @@ class CliCalculator extends Command
      */
     public function handle()
     {
-        $calculator = new Calculator();
-        $calculatorValidator = new CalculatorValidator();
-        $validOperation = false;
-        $validFirstNum = false;
-        $validSecondNum = false;
+        $this->info($this->calculator->instruction());
 
-        $this->info($calculator->init());
+        $operation = $this->getValidInput('Please input an operation', function ($input) {
+            return $this->calculatorValidator->isValidOperation($input);
+        }, CalculatorErrorMessages::invalidOperation());
 
-        while (!$validOperation) {
-            $operation = $this->ask('Please pick an operation');
-
-            if (empty($operation)) {
-                $this->error(CalculatorErrorMessages::CANNOT_BE_EMPTY);
-            }
-
-            if ($calculatorValidator->isValidOperation($operation)) {
-                $validOperation = true;
-            } else {
-                $this->error(CalculatorErrorMessages::invalidOperation());
-            }
-        }
-
-        while (!$validFirstNum) {
-            $firstNum = $this->ask('Input first number');
-
-            if ($calculatorValidator->isNumber($firstNum)) {
-                $validFirstNum = true;
-            } else {
-                $this->error(CalculatorErrorMessages::INVALID_INPUT);
-            }
-        }
+        $firstNum = $this->getValidInput('Input first number', function ($input) {
+            return $this->calculatorValidator->isNumber($input);
+        }, CalculatorErrorMessages::INVALID_INPUT);
 
         if ($operation == CalculatorOperations::SQUARE_ROOT) {
-            $result = $calculator->calculate($operation, $firstNum);
+            $result = $this->calculator->calculate($operation, $firstNum);
 
             if (!$result['success']) {
                 return $this->error($result['message']);
@@ -83,22 +73,43 @@ class CliCalculator extends Command
             return $this->info($result['data']);
         }
 
-        while (!$validSecondNum) {
-            $secondNum = $this->ask('Input second number');
+        $secondNum = $this->getValidInput('Input second number', function ($input) {
+            return $this->calculatorValidator->isNumber($input);
+        }, CalculatorErrorMessages::INVALID_INPUT);
 
-            if ($calculatorValidator->isNumber($secondNum)) {
-                $validSecondNum = true;
-            } else {
-                $this->error(CalculatorErrorMessages::INVALID_INPUT);
-            }
-        }
-
-        $result = $calculator->calculate($operation, $firstNum, $secondNum);
+        $result = $this->calculator->calculate($operation, $firstNum, $secondNum);
 
         if (!$result['success']) {
             return $this->error($result['message']);
         }
 
         return $this->info($result['data']);
+    }
+
+    /**
+     * Get valid input from the user.
+     *
+     * @param string $prompt
+     * @param callable $validationCallback
+     * @param string $errorMessage
+     *
+     * @return mixed
+     */
+    private function getValidInput(string $prompt, callable $validationCallback, string $errorMessage)
+    {
+        while (true) {
+            $input = $this->ask($prompt);
+
+            if (empty($input)) {
+                $this->error(CalculatorErrorMessages::CANNOT_BE_EMPTY);
+                continue;
+            }
+
+            if ($validationCallback($input)) {
+                return $input;
+            } else {
+                $this->error($errorMessage);
+            }
+        }
     }
 }

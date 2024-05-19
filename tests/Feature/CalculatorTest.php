@@ -23,13 +23,13 @@ class CalculatorTest extends TestCase
         $expected = "This is a CLI Calculator.\n";
         $expected .= "You can add, subtract, multiply, divide, a given pair of numbers, or even square root a number. \n";
         $expected .= "Here are the available operations: \n";
-        $expected .= "1. + (for addition) \n";
-        $expected .= "2. - (for subtraction) \n";
-        $expected .= "3. * (for multiplication) \n";
-        $expected .= "4. / (for division) \n";
-        $expected .= "5. sqrt (for square root) \n";
+        $expected .= "+ (for addition) \n";
+        $expected .= "- (for subtraction) \n";
+        $expected .= "* (for multiplication) \n";
+        $expected .= "/ (for division) \n";
+        $expected .= "sqrt (for square root) \n";
 
-        $this->assertEquals($expected, $this->calculator->init());
+        $this->assertEquals($expected, $this->calculator->instruction());
     }
 
     /** @test */

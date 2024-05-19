@@ -18,16 +18,16 @@ class Calculator implements CalculatorInterface
      *
      * @return string
      */
-    public function init()
+    public function instruction()
     {
         $message = "This is a CLI Calculator.\n";
         $message .= "You can add, subtract, multiply, divide, a given pair of numbers, or even square root a number. \n";
         $message .= "Here are the available operations: \n";
-        $message .= "1. + (for addition) \n";
-        $message .= "2. - (for subtraction) \n";
-        $message .= "3. * (for multiplication) \n";
-        $message .= "4. / (for division) \n";
-        $message .= "5. sqrt (for square root) \n";
+        $message .= "+ (for addition) \n";
+        $message .= "- (for subtraction) \n";
+        $message .= "* (for multiplication) \n";
+        $message .= "/ (for division) \n";
+        $message .= "sqrt (for square root) \n";
 
         return $message;
     }
