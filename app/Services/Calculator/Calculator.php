@@ -13,7 +13,6 @@ use Exception;
 
 class Calculator implements CalculatorInterface
 {
-
     /**
      * Gives the instruction for using the calculator.
      *

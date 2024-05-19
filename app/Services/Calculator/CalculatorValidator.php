@@ -28,7 +28,7 @@ class CalculatorValidator
      *
      * @return bool
      */
-    public static function isNumber(string $number)
+    public function isNumber(string $number)
     {
         return preg_match('/^-?\d+(\.\d+)?$/', $number);
     }
@@ -40,7 +40,7 @@ class CalculatorValidator
      *
      * @return string|void
      */
-    public static function isValidSquareRootNum(float $firstNum)
+    public function isValidSquareRootNum(float $firstNum)
     {
         return $firstNum > 0;
     }
