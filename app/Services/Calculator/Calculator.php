@@ -64,6 +64,8 @@ class Calculator implements CalculatorInterface
                 case CalculatorOperations::SQUARE_ROOT:
                     $data = self::squareRoot($firstNumber);
                     break;
+                default:
+                    throw new Exception(CalculatorErrorMessages::invalidOperation());
             }
 
             $result['data'] = $data;
