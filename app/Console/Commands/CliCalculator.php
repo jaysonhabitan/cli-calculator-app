@@ -100,7 +100,7 @@ class CliCalculator extends Command
         while (true) {
             $input = $this->ask($prompt);
 
-            if (empty($input)) {
+            if (empty($input) && $input != 0) {
                 $this->error(CalculatorErrorMessages::CANNOT_BE_EMPTY);
                 continue;
             }
