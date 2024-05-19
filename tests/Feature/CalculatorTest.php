@@ -92,4 +92,11 @@ class CalculatorTest extends TestCase
 
         $this->assertFalse($this->calculator->isValidOperation('xyz'));
     }
+
+    /** @test */
+    public function test_throws_exception_when_operation_is_incorrect()
+    {
+        $result = $this->calculator->calculate('abc', 5, 5);
+        $this->assertEquals($result['message'], CalculatorErrorMessages::invalidOperation());
+    }
 }
