@@ -5,7 +5,7 @@ This is a simple CLI Calculator app where user can Add, Subtract, Multiply, Divi
 
 ---
 #### How to run the Application? 
-Assuming that you have already clone the repository, first you must open the project, then open the terminal under that project. 
+Assuming that you have already clone the repository, first you must open the project, then open a terminal under this project. 
 After that, please run this command to initialize the app: 
 ``` 
 php artisan init:calculator 
