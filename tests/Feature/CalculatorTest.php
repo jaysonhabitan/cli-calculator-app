@@ -5,12 +5,12 @@ namespace Tests\Unit\Services\Calculator;
 use App\Services\Calculator\Calculator;
 use App\Enum\CalculatorOperations;
 use App\Enum\CalculatorErrorMessages;
+use App\Services\Calculator\CalculatorValidator;
 use Tests\TestCase;
 
 class CalculatorTest extends TestCase
 {
     protected $calculator;
-
     public function setUp(): void
     {
         parent::setUp();
@@ -85,12 +85,13 @@ class CalculatorTest extends TestCase
     public function test_validates_operation()
     {
         $operations = CalculatorOperations::all();
+        $validator = new CalculatorValidator;
 
         foreach ($operations as $operation) {
-            $this->assertTrue($this->calculator->isValidOperation($operation));
+            $this->assertTrue($validator->isValidOperation($operation));
         }
 
-        $this->assertFalse($this->calculator->isValidOperation('xyz'));
+        $this->assertFalse($validator->isValidOperation('xyz'));
     }
 
     /** @test */

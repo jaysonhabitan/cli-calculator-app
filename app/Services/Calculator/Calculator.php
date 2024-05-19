@@ -68,11 +68,7 @@ class Calculator implements CalculatorInterface
                     throw new Exception(CalculatorErrorMessages::invalidOperation());
             }
 
-            $messageResult = $operation != CalculatorOperations::SQUARE_ROOT
-                ? $firstNumber . ' ' . $operation . ' ' . $secondNumber . ' = '
-                : 'The square root of ' . $firstNumber . ' is ';
-
-            $result['data'] = $messageResult . $data;
+            $result['data'] = $data;
 
             return $result;
         } catch (\Exception $e) {
