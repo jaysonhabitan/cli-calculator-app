@@ -56,7 +56,7 @@ class CliCalculator extends Command
                 $this->error(CalculatorErrorMessages::CANNOT_BE_EMPTY);
             }
 
-            if ($calculator->isValidOperation($operation)) {
+            if ($calculatorValidator->isValidOperation($operation)) {
                 $validOperation = true;
             } else {
                 $this->error(CalculatorErrorMessages::invalidOperation());

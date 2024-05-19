@@ -4,6 +4,11 @@ namespace App\Services\Calculator;
 
 use App\Enum\CalculatorErrorMessages;
 use App\Enum\CalculatorOperations;
+use App\Services\Calculator\Operations\Add;
+use App\Services\Calculator\Operations\Divide;
+use App\Services\Calculator\Operations\Multiply;
+use App\Services\Calculator\Operations\SquareRoot;
+use App\Services\Calculator\Operations\Subtract;
 use Exception;
 
 class Calculator implements CalculatorInterface
@@ -43,26 +48,22 @@ class Calculator implements CalculatorInterface
             'message' => null
         ];
 
-        /**
-         * TODO: Functions like add, subtract, etc.. can be separated to it's own class.
-         * Then implement a dependency injection.
-         */
         try {
             switch ($operation) {
                 case CalculatorOperations::ADDITION:
-                    $data = self::add($firstNumber, $secondNumber);
+                    $data = (new Add($firstNumber, $secondNumber))->compute();
                     break;
                 case CalculatorOperations::SUBTRACTION:
-                    $data = self::subtract($firstNumber, $secondNumber);
+                    $data = (new Subtract($firstNumber, $secondNumber))->compute();
                     break;
                 case CalculatorOperations::MULTIPLICATION:
-                    $data = self::multiply($firstNumber, $secondNumber);
+                    $data = (new Multiply($firstNumber, $secondNumber))->compute();
                     break;
                 case CalculatorOperations::DIVISION:
-                    $data = self::divide($firstNumber, $secondNumber);
+                    $data = (new Divide($firstNumber, $secondNumber))->compute();
                     break;
                 case CalculatorOperations::SQUARE_ROOT:
-                    $data = self::squareRoot($firstNumber);
+                    $data = (new SquareRoot($firstNumber))->compute();
                     break;
                 default:
                     throw new Exception(CalculatorErrorMessages::invalidOperation());
@@ -81,91 +82,5 @@ class Calculator implements CalculatorInterface
 
             return $result;
         }
-    }
-
-    /**
-     * Adds the two given numbers.
-     *
-     * @param float $firstNum
-     * @param float $secondNum
-     *
-     * @return float
-     */
-    public function add(float $firstNum, float $secondNum)
-    {
-        return $firstNum + $secondNum;
-    }
-
-    /**
-     * Subtracts two given numbers.
-     *
-     * @param float $firstNum
-     * @param float $secondNum
-     *
-     * @return float
-     */
-    public function subtract(float $firstNum, float $secondNum)
-    {
-        return $firstNum - $secondNum;
-    }
-
-    /**
-     * Multiplies two given numbers.
-     *
-     * @param float $firstNum
-     * @param float $secondNum
-     *
-     * @return float
-     */
-    public function multiply(float $firstNum, float $secondNum)
-    {
-        return $firstNum * $secondNum;
-    }
-
-    /**
-     * Divides two given numbers.
-     *
-     * @param float $firstNum
-     * @param float $secondNum
-     *
-     * @return float|string
-     */
-    public function divide(float $firstNum, float $secondNum)
-    {
-        if ($secondNum == 0) {
-            throw new Exception(CalculatorErrorMessages::CANNOT_BE_DIVIDE_BY_ZERO);
-        }
-
-        return $firstNum / $secondNum;
-    }
-
-    /**
-     * Square roots the given number
-     *
-     * @param float $firstNum
-     *
-     * @return float|string
-     */
-    public function squareRoot(float $firstNum)
-    {
-        if (!(new CalculatorValidator)->isValidSquareRootNum($firstNum)) {
-            throw new Exception(CalculatorErrorMessages::CANNOT_SQUARE_NEGATIVE_NUMBER);
-        }
-
-        return sqrt($firstNum);
-    }
-
-    /**
-     * Validate the given operation of the user.
-     *
-     * @param string $operation
-     *
-     * @return string
-     */
-    public function isValidOperation(string $operation)
-    {
-        $allowedOperations = array_values(CalculatorOperations::all());
-
-        return in_array($operation, $allowedOperations);
     }
 }
